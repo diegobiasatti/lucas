@@ -100,13 +100,14 @@ die();*/
 	{
 		try{
 			//$db = getDB();
-			$query = "SELECT email, username, nombre_usuario, linea1 , linea2, precio, foto
+			$query = "SELECT id_ofertas, email, username, nombre_usuario, linea1 , linea2, precio, foto
 			FROM usuarios 
 			INNER JOIN ofertas 
-			ON usuarios.id_usuarios= ofertas.id_usuario";
+			ON usuarios.id_usuarios= ofertas.id_usuario
+			WHERE usuarios.id_usuarios =:ID";
 			//"SELECT email,username,nombre_usuario FROM usuarios WHERE id_usuarios=:id_usuarios";
 			$stmt = $this->conexion->prepare($query); 
-			//$stmt->bindParam("id_usuarios", $id_usuarios,PDO::PARAM_INT);
+			$stmt->bindParam("ID", $id_usuarios,PDO::PARAM_INT);
 			$stmt->execute();
 			//$data = $stmt->fetch(PDO::FETCH_OBJ); //User data
 			$data = $stmt->fetchAll(); //User data
@@ -116,6 +117,7 @@ die();*/
 			echo '{"error":{"text":'. $e->getMessage() .'}}';
 		}
 	}
+	
 	
 
 }

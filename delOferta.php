@@ -3,19 +3,18 @@ include 'config.php';
 	include('session.php');
 	require_once 'controller/ofertaController.php';
 $bienvenida = "";
-//$usuario =[];
-$cantidad = 1;
 
 $userDetails=$usuario->userDetails($session_uid);
 
-$response = new ofertaController();
-$cantOfertasDisponibles = $response->ofertasDisponiblesXuser($session_uid);
+if ($_SERVER['REQUEST_METHOD'] == 'GET') 
+{
+	$id_oferta=(isset($_GET['delete'])) ? trim($_GET['delete']) : '';
 
-/*echo "<pre>";
-print_r($userDetails);
-echo "</pre>";
-die();
-*/
+	$response = new ofertaController();
+	$getOferta	 = $response->getOferta($id_oferta);
+	
+}
+
 
 
 ?>
@@ -230,61 +229,45 @@ die();
 		<div class="row">
 			<div class="table-responsive"">
 			<table class="table table-bordered table-striped">
-				<?php  foreach ($userDetails as $key => $value) { ?>
+				
 				 <thead class="thead-dark">
 				    <tr>
-				      <th scope="col">Oferta Nro <?=$cantidad?></th>
-				     
+				      <th scope="col">Oferta a Eliminar</th>
 				    </tr>
 				  </thead>
 				
 				<tr>
-						<td ><img style="max-width: 20%;" src="<?=$value['foto']?>" alt="" ></td>
+						<td ><img style="max-width: 20%;" src="<?=$getOferta['foto']?>" alt="" ></td>
 					</tr>
 					<tr>
-						<td><?=$value['linea1']?></td>
+						<td><?=$getOferta['linea1']?></td>
 					</tr>
 					<tr>
-						<td><?=$value['linea2']?></td>
+						<td><?=$getOferta['linea2']?></td>
 					</tr>
 					<tr>
-						<td>$ <?=$value['precio']?></td>
+						<td>$ <?=$getOferta['precio']?></td>
 					</tr>
 					
 					<tr>
 						<td>
-							<a href="delOferta.php?delete=<?= $value['id_ofertas'] ?>"><img style="max-width: 5%;" src="images/iconos/delete.png" title = "Borrar" alt=""></a>
+							<a href=""><img style="max-width: 5%;" src="images/iconos/delete.png" title = "Borrar" alt=""></a>
 							<a href=""><img style="max-width: 5%;" src="images/iconos/modificar.png" title="Modificar" alt=""></a>
-							
+							<a onclick="return confirm('¿Estás seguro de eliminar esta Oferta?')"
+                    href="productos_eliminar.php?prd_eliminar=<?= $value['id_ofertas'] ?>">
+                    <img src="images/iconos/modificar.png" alt="Eliminar">
+                </a>
 						</td>
 					</tr>
 
-				<?php  $cantidad++;} ?>
+				
 			</table>
 		</div>
 			</div>
 
 			<div class="row">
 				<table>
-					<tr>
-						<td><p>Cantidad de Ofertas Limite: <?=$cantOfertasDisponibles['cant_ofertas'];?></p></td>
-					</tr>
-					<tr>
-						<td><p>Ofertas Concretadas : <?=$cantidad-1?></p></td>
-					</tr>
-					<tr>
-						<?php 
-							if($cantidad-1<$cantOfertasDisponibles['cant_ofertas'])
-							{
-								$disponible = '';
-							}
-							else
-							{
-								$disponible ='disabled';
-							}
-						?>
-						<td><a href="addOferta.php"><input type="text"class="btn btn-primary btn-sm" value="Agregar Oferta"  <?=$disponible?> ></a></td>
-					</tr>
+					
 				</table>
 			</div>
 
