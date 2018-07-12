@@ -47,37 +47,35 @@ class ofertaController{
 		$query2 = "DELETE FROM ofertas WHERE id_ofertas = :id";
 		$producto = $this->conexion->prepare($query2);	
 		$producto->bindParam(":id", $id_oferta, PDO::PARAM_INT);
-		if ( $producto->execute() ) {
-			return true;
-		}
-		else {return  false;}
+		$solucion = $producto->execute();
+		return $solucion;
 	}
 
 	public function getOferta($id_oferta)
 	{
 		$query= "SELECT linea1, linea2, precio, foto FROM ofertas WHERE id_ofertas=:id";
-		$consulta = $this->conexion->prepare($query);
-		$consulta->bindParam(":id", $id_oferta, PDO::PARAM_INT );
-		$consulta->execute();
-		return  $consulta->fetch();
+		$getOfer = $this->conexion->prepare($query);
+		$getOfer->bindParam(":id", $id_oferta, PDO::PARAM_INT );
+		$getOfer->execute();
+		return  $getOfer->fetch();
 		
 	}
 
-	/*public function productoUpdate($id_usuarios)
+	public function updateOferta($id_oferta, $id_categoria, $linea1, $linea2, $precio, $fotoUrl)
 		{
-			$id2 = 1000;
-			$nombre2 = "Producto PDO";
-			$query2 = "UPDATE productos SET nombre = :nombre WHERE id_producto = :id";
-			$producto = $cnxPDO->prepare($query2);
-			$producto->bindParam(":id", $id2, PDO::PARAM_INT);
-			$producto->bindParam(":nombre", $nombre2, PDO::PARAM_STR);
-			if ( $producto->execute() ) {
-				echo "PDO: Actualizado ok<br>";
+			$query2 = "UPDATE ofertas SET"
+			." id_categoria=:id_cat, linea1=:l1, linea2=:l2, precio=:precio, foto=:fotoUrl WHERE id_ofertas = :id_oferta";
+			$ofertaUpd = $this->conexion->prepare($query2);
+			$ofertaUpd->bindParam(":id_oferta", $id_oferta, PDO::PARAM_INT);
+			$ofertaUpd->bindParam(":id_cat", $id_categoria, PDO::PARAM_INT);
+			$ofertaUpd->bindParam(":l1", $linea1, PDO::PARAM_STR);
+			$ofertaUpd->bindParam(":l2", $linea2, PDO::PARAM_STR);
+			$ofertaUpd->bindParam(":precio", $precio, PDO::PARAM_STR);
+			$ofertaUpd->bindParam(":fotoUrl", $fotoUrl, PDO::PARAM_STR);
+			
+			$solucion= $ofertaUpd->execute() ;
+				return $solucion;
 			}
-		}
-	*/
-
-
-
-
+		
+	
 }

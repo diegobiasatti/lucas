@@ -3,66 +3,19 @@ include 'config.php';
 	include('session.php');
 	require_once 'controller/ofertaController.php';
 $bienvenida = "";
-$msg ="";
-$cantidad = 1;
 
+$userDetails=$usuario->userDetails($session_uid);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
-	if(isset($_GET['del']))
-	{
-		$id_oferta=(isset($_GET['del'])) ? trim($_GET['del']) : '';
+	$id_oferta=(isset($_GET['update'])) ? trim($_GET['update']) : '';
 
-		$response = new ofertaController();
-		$getOferta	 = $response->deleteOferta($id_oferta);
-
-		if(!$getOferta)
-		{
-			$msg = "Error en la Eliminacion, Intente nuevamente.";
-		}
-	}
-	
-		//linea1=Limones+x+Kg&
-		//linea2=Martes+de+Oferta&precio=14&
-		//id=22&
-		//foto=https%3A%2F%2Fimages2cdn.sanalmarket.com.tr%2Fimages%2F1000%2Furun%2F%2Flarge%2F27262000_large.jpg&
-		//categoria=2
-		$id_oferta=(isset($_GET['id'])) ? trim($_GET['id']) : '';
-		$linea1 = (isset($_GET['linea1'])) ? trim($_GET['linea1']) : '';
-   		$linea2=(isset($_GET['linea2'])) ? trim($_GET['linea2']) : '';
-		$precio=(isset($_GET['precio'])) ? trim($_GET['precio']) : '';
-		$foto=(isset($_GET['foto'])) ? trim($_GET['foto']) : '';
-		$id_categoria=(isset($_GET['categoria'])) ? trim($_GET['categoria']) : '';
-		
-		/*echo $id_oferta . "<br>" .
-		$linea1 . "<br>" .
-		$linea2 . "<br>" .
-		$precio . "<br>" .
-		$foto . "<br>" .
-		$id_categoria ;
-		die();
-		*/
-		$res = new ofertaController();
-		$updOferta	 = $res->updateOferta($id_oferta, $id_categoria, $linea1, $linea2, $precio, $foto );
-
-		
-		if(!$updOferta)
-		{
-			$msg = "Error en la Actualizacion, Intente nuevamente.";
-		}	
-	
+	$response = new ofertaController();
+	$getOferta	 = $response->getOferta($id_oferta);
 	
 }
 
-$userDetails=$usuario->userDetails($session_uid);
-$response = new ofertaController();
-$cantOfertasDisponibles = $response->ofertasDisponiblesXuser($session_uid);
 
-/*echo "<pre>";
-print_r($userDetails);
-echo "</pre>";
-die();
-*/
 
 ?>
 <!DOCTYPE html>
@@ -266,7 +219,7 @@ die();
 
 			</div>
 			
-	<p><?=$msg?></p>
+	
 	<div>
 
 	</div>
@@ -274,64 +227,58 @@ die();
 
 		</div>
 		<div class="row">
-			<div class="table-responsive"">
-			<table class="table table-bordered table-striped">
-				<?php  foreach ($userDetails as $key => $value) { ?>
-				 <thead class="thead-dark">
-				    <tr>
-				      <th scope="col">Oferta Nro <?=$cantidad?></th>
-				     
-				    </tr>
-				  </thead>
-				
-				<tr>
-						<td ><img style="max-width: 20%;" src="<?=$value['foto']?>" alt="" ></td>
-					</tr>
-					<tr>
-						<td><?=$value['linea1']?></td>
-					</tr>
-					<tr>
-						<td><?=$value['linea2']?></td>
-					</tr>
-					<tr>
-						<td>$ <?=$value['precio']?></td>
-					</tr>
-					
-					<tr>
-						<td>
-							<a href="delOferta.php?delete=<?= $value['id_ofertas'] ?>"><img style="max-width: 5%;" src="images/iconos/delete.png" title = "Borrar" alt=""></a>
-							<a href="updateOferta.php?update=<?=$value['id_ofertas']?>"><img style="max-width: 5%;" src="images/iconos/modificar.png" title="Modificar" alt=""></a>
-							
-						</td>
-					</tr>
+			<form action="usuario.php" method="GET" accept-charset="utf-8" id="categoria">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Linea 1</label>
+				    <input type="input" name="linea1" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?=$getOferta['linea1']?>">
+				  </div>
+				 
+				   <div class="form-group">
+				    <label for="exampleInputEmail1">Linea 2</label>
+				    <input type="input" name="linea2" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?=$getOferta['linea2']?>">
+				  </div>
+				 
+				   <div class="form-group">
+				    <label for="exampleInputEmail1">Precio</label>
+				    <input type="number" name="precio" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?=$getOferta['precio']?>">
+				  </div>
+				 
+				  <div class="form-group" hidden="">
+				    <label for="exampleInputEmail1">ID</label>
+				    <input type="number" name="id" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?=$id_oferta?>">
+				  </div>
 
-				<?php  $cantidad++;} ?>
-			</table>
-		</div>
+				   <div class="form-group">
+				    <label for="exampleInputEmail1">Foto</label>
+				    <input type="input" name="foto" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?=$getOferta['foto']?>">
+				    <p><a href="#"><img style="max-width: 20%;" src="<?=$getOferta['foto']?>" alt="" ></a></p>
+				  </div>
+				
+				 <div class="form-group"><label for="exampleInputEmail1">Seleccion la Categoria</label></div>
+				<div class="form-check">
+					 
+				  <input class="form-group" type="radio" name="categoria" id="exampleRadios1" value="1" >
+				  <label class="form-check-label" for="exampleRadios1">
+				    Carniceria
+				  </label>
+				</div>
+				<div class="form-check">
+					 
+				  <input class="form-group" type="radio" name="categoria" id="verduleria" value="2" >
+				  <label class="form-check-label" for="verduleria">
+				    Verduleria
+				  </label>
+				</div>
+
+				  <div class="form-group">
+				  <button type="submit" class="form-group btn btn-primary ">Finalizar</button>
+				</div>
+
+			</form>
+
 			</div>
 
 			<div class="row">
-				<table>
-					<tr>
-						<td><p>Cantidad de Ofertas Limite: <?=$cantOfertasDisponibles['cant_ofertas'];?></p></td>
-					</tr>
-					<tr>
-						<td><p>Ofertas Concretadas : <?=$cantidad-1?></p></td>
-					</tr>
-					<tr>
-						<?php 
-							if($cantidad-1<$cantOfertasDisponibles['cant_ofertas'])
-							{
-								$disponible = '';
-							}
-							else
-							{
-								$disponible ='disabled';
-							}
-						?>
-						<td><a href="addOferta.php"><input type="text"class="btn btn-primary btn-sm" value="Agregar Oferta"  <?=$disponible?> ></a></td>
-					</tr>
-				</table>
 			</div>
 
 		

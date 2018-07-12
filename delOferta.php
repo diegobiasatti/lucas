@@ -8,7 +8,8 @@ $userDetails=$usuario->userDetails($session_uid);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') 
 {
-	$id_oferta=(isset($_GET['delete'])) ? trim($_GET['delete']) : '';
+	
+		$id_oferta=(isset($_GET['delete'])) ? trim($_GET['delete']) : '';
 
 	$response = new ofertaController();
 	$getOferta	 = $response->getOferta($id_oferta);
@@ -228,6 +229,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 		</div>
 		<div class="row">
 			<div class="table-responsive"">
+			
+
+
 			<table class="table table-bordered table-striped">
 				
 				 <thead class="thead-dark">
@@ -249,25 +253,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 						<td>$ <?=$getOferta['precio']?></td>
 					</tr>
 					
-					<tr>
-						<td>
-							<a href=""><img style="max-width: 5%;" src="images/iconos/delete.png" title = "Borrar" alt=""></a>
-							<a href=""><img style="max-width: 5%;" src="images/iconos/modificar.png" title="Modificar" alt=""></a>
-							<a onclick="return confirm('¿Estás seguro de eliminar esta Oferta?')"
-                    href="productos_eliminar.php?prd_eliminar=<?= $value['id_ofertas'] ?>">
-                    <img src="images/iconos/modificar.png" alt="Eliminar">
-                </a>
-						</td>
-					</tr>
-
 				
 			</table>
+
 		</div>
 			</div>
 
 			<div class="row">
 				<table>
-					
+						<a href="usuario.php?del=<?=$id_oferta?>	"><button type="submit" class="form-group btn btn-primary">Eliminar Definitivamente</button></a>
 				</table>
 			</div>
 
